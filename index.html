@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Explore the ECSAtech working group programme on artificial intelligence, data, tools and technology in citizen science.">
-  <title>ECSAtech | Projects, Data, Tools and Technology</title>
+  <meta name="description" content="ECSAtech seminar, 16 November 2026: building a citizen science monitoring prototype with AI, a mobile-friendly survey and a live map.">
+  <title>ECSAtech | Building a citizen science monitoring platform</title>
   <style>
     :root {
       color-scheme: light;
@@ -12,10 +12,8 @@
       --muted: #405853;
       --green: #075b4d;
       --paper: #f5f8f6;
-      --white: #fff;
-      --line: #cbdad3;
       --mint: #dcf3e7;
-      --radius: 1rem;
+      --line: #cbdad3;
     }
 
     * { box-sizing: border-box; }
@@ -24,34 +22,34 @@
       margin: 0;
       background: var(--paper);
       color: var(--ink);
-      font: 1rem/1.6 system-ui, -apple-system, "Segoe UI", sans-serif;
-      overflow-wrap: break-word;
+      font: 1rem/1.6 system-ui, sans-serif;
     }
 
     a { color: var(--green); text-underline-offset: .2em; }
-    a:hover { text-decoration-thickness: .15em; }
 
     :focus-visible {
       outline: .2rem solid currentColor;
       outline-offset: .25rem;
     }
 
-    .wrap { width: min(72rem, calc(100% - 2rem)); margin-inline: auto; }
+    .wrap {
+      width: min(68rem, calc(100% - 2rem));
+      margin-inline: auto;
+    }
 
     .skip-link {
       position: absolute;
       top: .5rem;
       left: .5rem;
-      z-index: 1;
       padding: .5rem .75rem;
-      background: var(--white);
+      background: white;
       transform: translateY(-150%);
     }
 
     .skip-link:focus { transform: none; }
 
     .site-header {
-      background: var(--white);
+      background: white;
       border-bottom: 1px solid var(--line);
     }
 
@@ -60,310 +58,215 @@
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      gap: .5rem 1.5rem;
-      padding-block: .85rem;
+      gap: .5rem 1.25rem;
+      padding-block: 1rem;
     }
 
-    .brand { font-size: 1.3rem; font-weight: 750; text-decoration: none; }
+    .brand { font-size: 1.25rem; font-weight: 750; }
 
     nav ul {
       display: flex;
       flex-wrap: wrap;
-      gap: .35rem 1.25rem;
+      gap: .5rem 1.25rem;
+      list-style: none;
       margin: 0;
       padding: 0;
-      list-style: none;
     }
 
     .hero {
-      padding-block: clamp(3rem, 8vw, 6rem);
+      padding-block: clamp(2.75rem, 7vw, 5.5rem);
       background: var(--green);
-      color: var(--white);
+      color: white;
     }
 
-    .eyebrow { margin: 0 0 .5rem; font-weight: 650; }
+    .eyebrow { margin: 0 0 .75rem; font-weight: 650; }
+    h1, h2, h3 { line-height: 1.18; }
 
-    h1, h2, h3 { line-height: 1.2; }
-    h1 { margin: 0; font-size: clamp(2.75rem, 8vw, 5rem); }
-    h2 { margin: 0 0 .75rem; font-size: clamp(1.65rem, 4vw, 2.4rem); }
-    h3 { margin: 0 0 1rem; font-size: 1.2rem; }
+    h1 {
+      max-width: 21ch;
+      margin: 0;
+      font-size: clamp(2.2rem, 6vw, 4rem);
+    }
 
-    .hero-summary { max-width: 62ch; font-size: clamp(1.1rem, 2vw, 1.3rem); }
-
-    .actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.5rem; }
+    h2 { margin: 0 0 1rem; font-size: clamp(1.55rem, 4vw, 2.25rem); }
+    h3 { margin: 0 0 .5rem; font-size: 1.2rem; }
+    p { max-width: 70ch; }
+    .lead { font-size: 1.2rem; }
+    .event-details { font-weight: 650; }
 
     .button {
       display: inline-block;
+      margin-top: .5rem;
       padding: .65rem 1rem;
-      border: 1px solid var(--mint);
-      border-radius: .55rem;
+      border-radius: .5rem;
       background: var(--mint);
       color: var(--ink);
       font-weight: 700;
     }
 
-    .button-secondary { background: transparent; color: var(--white); }
+    .button:focus-visible { outline-color: white; }
 
     .section { padding-block: clamp(2rem, 5vw, 4rem); }
-    .intro { max-width: 75ch; margin: 0 0 1.5rem; color: var(--muted); }
 
-    .grid {
+    .cards {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
       gap: 1rem;
+      margin-top: 1.5rem;
     }
 
     .card {
-      padding: clamp(1rem, 3vw, 1.5rem);
+      padding: 1.25rem;
       border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: var(--white);
+      border-radius: .75rem;
+      background: white;
     }
 
-    .period { display: block; margin-bottom: .3rem; color: var(--green); font-size: .9rem; }
-    .schedule { margin: 0; }
-    .schedule > div + div { margin-top: .85rem; padding-top: .85rem; border-top: 1px solid var(--line); }
-    .schedule dt { font-weight: 700; }
-    .schedule dd { margin: .15rem 0 0; }
-    .format { display: block; color: var(--muted); font-size: .93rem; }
-    .materials-link { display: inline-block; margin-top: .5rem; font-weight: 650; }
+    .card p { margin: 0; }
+    .note { color: var(--muted); }
+    .programme { background: var(--mint); }
 
-    .past-programme { background: var(--white); border-block: 1px solid var(--line); }
-    .participation { background: var(--mint); }
-    .participation ul { padding-left: 1.3rem; }
-    .participation li + li { margin-top: .35rem; }
-    footer { padding-block: 1.25rem; color: var(--muted); }
+    details {
+      max-width: 70ch;
+      padding: .85rem 0;
+      border-top: 1px solid var(--line);
+    }
 
-    @media (max-width: 44rem) {
-      .grid { grid-template-columns: 1fr; }
+    summary { cursor: pointer; font-weight: 700; }
+    details li + li { margin-top: .4rem; }
+
+    footer {
+      padding-block: 1.25rem;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
     }
   </style>
 </head>
-
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
   <header class="site-header">
     <div class="wrap header-inner">
-      <a class="brand" href="#home">ECSAtech</a>
+      <a class="brand" href="index.html">ECSAtech</a>
       <nav aria-label="Main navigation">
         <ul>
-          <li><a href="#programme-2027">2027 programme</a></li>
-          <li><a href="#programme-2026">2026 programme</a></li>
-          <li><a href="#take-part">Take part</a></li>
+          <li><a href="#seminar">16 November seminar</a></li>
+          <li><a href="freshwater-survey.html">Session materials</a></li>
+          <li><a href="#programme">Working group programme</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
   <main id="main">
-    <section class="hero" id="home" aria-labelledby="home-title">
+    <section class="hero" id="seminar" aria-labelledby="seminar-title">
       <div class="wrap">
-        <p class="eyebrow">ECSA Projects, Data, Tools and Technology working group</p>
-        <h1 id="home-title">ECSAtech</h1>
-        <p class="hero-summary">
-          We bring ECSA members together to explore responsible uses of artificial
-          intelligence (AI) in citizen science, develop practical resources and
-          discuss how citizen science data can connect with the European Green
-          Deal data space.
+        <p class="eyebrow">ECSAtech seminar · 16 November 2026</p>
+        <h1 id="seminar-title">Can we build a citizen science monitoring platform in an hour?</h1>
+        <p class="lead">
+          The challenge: use AI to go from a blank page to a working prototype
+          with a mobile-friendly survey and an online map that updates as
+          observations are submitted, using free tools.
         </p>
-        <div class="actions">
-          <a class="button" href="#programme-2027">Explore the 2027 programme</a>
-          <a class="button button-secondary" href="#take-part">See how to take part</a>
-        </div>
+        <p class="event-details">
+          <time datetime="2026-11-16T15:00:00Z">
+            Monday 16 November 2026, 15:00 UK time / 16:00 CET
+          </time>
+          · Online seminar in English
+        </p>
+        <a class="button" href="freshwater-survey.html">Go to the session materials page</a>
       </div>
     </section>
 
-    <section class="section" id="programme-2027" aria-labelledby="title-2027">
+    <section class="section" aria-labelledby="challenge-title">
       <div class="wrap">
-        <h2 id="title-2027">2027 activity programme</h2>
-        <p class="intro">
-          Join webinars, workshops and community discussions, or contribute to
-          shared resources between sessions. Topics and formats may be refined
-          with member input during the year.
+        <h2 id="challenge-title">From a freshwater survey to a live map</h2>
+        <p>
+          Luigi Ceccaroni, innovation lead at Earthwatch, set out to show how
+          several AI tools could help design and build a citizen science
+          monitoring platform. The RiverWatch web app and FreshWater Watch
+          served as starting examples for designing a tool people could use
+          to record observations in the field.
         </p>
 
-        <div class="grid">
+        <div class="cards">
           <article class="card">
-            <h3><span class="period">January to March</span>Foundations and shared understanding</h3>
-            <dl class="schedule">
-              <div>
-                <dt>January</dt>
-                <dd>AI in citizen science and the European Green Deal data space
-                  <span class="format">Webinar and discussion</span>
-                </dd>
-              </div>
-              <div>
-                <dt>February</dt>
-                <dd>Open-weight AI models and responsible AI principles
-                  <span class="format">Community review and discussion</span>
-                </dd>
-              </div>
-              <div>
-                <dt>March</dt>
-                <dd>AI readiness and sensitive data in citizen science
-                  <span class="format">Member exchange</span>
-                </dd>
-              </div>
-            </dl>
+            <h3>Design the survey</h3>
+            <p>
+              Decide what volunteers need to capture, from site details and
+              visible conditions to water-quality observations.
+            </p>
           </article>
 
           <article class="card">
-            <h3><span class="period">April to June</span>Practical uses and data safeguards</h3>
-            <dl class="schedule">
-              <div>
-                <dt>April</dt>
-                <dd>Generative AI for data collection and participant engagement
-                  <span class="format">Online workshop</span>
-                </dd>
-              </div>
-              <div>
-                <dt>May</dt>
-                <dd>Connecting citizen science data with the European Green Deal data space
-                  <span class="format">Webinar with invited expertise</span>
-                </dd>
-              </div>
-              <div>
-                <dt>June</dt>
-                <dd>Confidential data and the use of AI systems
-                  <span class="format">Online workshop</span>
-                </dd>
-              </div>
-            </dl>
+            <h3>Build for field use</h3>
+            <p>
+              Use AI to develop a mobile-friendly prototype that lets people
+              submit observations from their phones.
+            </p>
           </article>
 
           <article class="card">
-            <h3><span class="period">July to September</span>Policy, quality and governance</h3>
-            <dl class="schedule">
-              <div>
-                <dt>July</dt>
-                <dd>The EU AI Act and citizen science
-                  <span class="format">Expert briefing and discussion</span>
-                </dd>
-              </div>
-              <div>
-                <dt>August</dt>
-                <dd>AI content quality, misinformation and citizen science data
-                  <span class="format">Community discussion and policy update</span>
-                </dd>
-              </div>
-              <div>
-                <dt>September</dt>
-                <dd>Data governance for AI in citizen science
-                  <span class="format">Collaborative working session</span>
-                </dd>
-              </div>
-            </dl>
-          </article>
-
-          <article class="card">
-            <h3><span class="period">October to December</span>Tools, communication and shared resources</h3>
-            <dl class="schedule">
-              <div>
-                <dt>October</dt>
-                <dd>Open-source AI tools in citizen science
-                  <span class="format">Community showcase</span>
-                </dd>
-              </div>
-              <div>
-                <dt>November</dt>
-                <dd>Generative AI for science communication and outreach
-                  <span class="format">Workshop and panel discussion</span>
-                </dd>
-              </div>
-              <div>
-                <dt>December</dt>
-                <dd>Open-source AI resources and year-end community review
-                  <span class="format">Community launch and planning session</span>
-                </dd>
-              </div>
-            </dl>
+            <h3>Show observations on a map</h3>
+            <p>
+              Connect the survey to an online map so that new submissions
+              can be displayed as they come in.
+            </p>
           </article>
         </div>
+
+        <p>
+          Freshwater was the example. The same design exercise could start
+          with a question about biodiversity, astronomy or another citizen
+          science topic. The seminar was open to the whole ECSA community,
+          with no prior experience in environmental monitoring or app building
+          required.
+        </p>
+
+        <p class="note">
+          The seminar was set up for automatic transcription, with no
+          recording planned. The session materials page is reserved for
+          resources that can be shared separately.
+        </p>
       </div>
     </section>
 
-    <section class="section past-programme" id="programme-2026" aria-labelledby="title-2026">
+    <section class="section programme" id="programme" aria-labelledby="programme-title">
       <div class="wrap">
-        <h2 id="title-2026">November and December 2026 programme</h2>
-        <p class="intro">
-          The programme combines practical examples of AI use with discussions
-          on responsible AI principles and citizen science data sharing.
+        <h2 id="programme-title">About ECSAtech</h2>
+        <p>
+          The ECSA Projects, Data, Tools and Technology working group explores
+          how technology can make citizen science more accessible,
+          collaborative and effective. Existing projects provide examples
+          for testing ideas that other teams can adapt.
         </p>
 
-        <div class="grid">
-          <article class="card">
-            <h3>November</h3>
-            <dl class="schedule">
-              <div>
-                <dt>Using ChatGPT to design a freshwater survey</dt>
-                <dd>
-                  <span class="format">
-                    <time datetime="2026-11-16T15:00:00Z">16 November 2026, 15:00 UK time</time>
-                  </span>
-                  An interactive session using FreshWater Watch as an example.
-                  The activity was designed for members to draft and review an
-                  original questionnaire on freshwater sites, visible conditions
-                  and water-quality observations.
-                  <br>
-                  <a class="materials-link" href="freshwater-survey.html">
-                    View the freshwater survey session materials
-                  </a>
-                </dd>
-              </div>
-              <div>
-                <dt>Open-source AI tools for citizen science</dt>
-                <dd>
-                  <span class="format">November, details to follow</span>
-                  A community call with short member examples and discussion
-                  of tools, use cases and lessons learned.
-                </dd>
-              </div>
-            </dl>
-          </article>
+        <details>
+          <summary>Other activities in November and December 2026</summary>
+          <ul>
+            <li>November: community exchange on open-source AI tools.</li>
+            <li>November to December: review of draft responsible AI principles.</li>
+            <li>December: working session on citizen science data and the European Green Deal data space.</li>
+            <li>December: year-end community review and priorities for 2027.</li>
+          </ul>
+        </details>
 
-          <article class="card">
-            <h3>November to December</h3>
-            <dl class="schedule">
-              <div>
-                <dt>Responsible AI principles for citizen science</dt>
-                <dd>
-                  A community review of draft principles, with members invited
-                  to share comments and questions.
-                </dd>
-              </div>
-              <div>
-                <dt>Citizen science data and the European Green Deal data space</dt>
-                <dd>
-                  <span class="format">December</span>
-                  A working session on opportunities, data needs and questions
-                  for future collaboration.
-                </dd>
-              </div>
-              <div>
-                <dt>Year-end community review</dt>
-                <dd>
-                  <span class="format">December</span>
-                  An open discussion of the year's themes and priorities for 2027.
-                </dd>
-              </div>
-            </dl>
-          </article>
-        </div>
-      </div>
-    </section>
+        <details>
+          <summary>2027 programme at a glance</summary>
+          <ul>
+            <li>January to March: AI foundations, open-weight models, responsible AI and sensitive data.</li>
+            <li>April to June: generative AI in practice, the European Green Deal data space and confidential data.</li>
+            <li>July to September: the EU AI Act, content quality, misinformation and data governance.</li>
+            <li>October to December: open-source tools, science communication and shared resources.</li>
+          </ul>
+          <p>Topics and formats may change with member input.</p>
+        </details>
 
-    <section class="section participation" id="take-part" aria-labelledby="take-part-title">
-      <div class="wrap">
-        <h2 id="take-part-title">Take part</h2>
-        <p>ECSA members can contribute during sessions and between them:</p>
-        <ul>
-          <li>Share examples from citizen science projects.</li>
-          <li>Suggest or demonstrate tools and describe what you learned from using them.</li>
-          <li>Comment on draft principles and help develop shared resources.</li>
-          <li>Bring questions about data sharing and how different systems can exchange and use citizen science data.</li>
-        </ul>
-        <p>Session details and participation information will be shared through ECSA working group channels.</p>
+        <p>
+          ECSA members can share examples, suggest tools and contribute to
+          draft resources. Participation details will be shared through
+          ECSA working group channels.
+        </p>
       </div>
     </section>
   </main>
