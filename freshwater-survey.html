@@ -1,29 +1,22 @@
 <!doctype html>
 <html lang="en-GB">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>16 November seminar materials | ECSAtech</title>
-  <style>
-    body {
-      width: min(44rem, calc(100% - 2rem));
-      margin: 2rem auto;
-      background: #f5f8f6;
-      color: #162e2b;
-      font: 1rem/1.6 system-ui, sans-serif;
-    }
-    a { color: #075b4d; text-underline-offset: .2em; }
-    h1 { line-height: 1.2; }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Building a citizen science monitoring platform with AI | ECSAtech</title>
+<style>*{box-sizing:border-box}body{margin:0;background:#f5f8f6;color:#162e2b;font:1rem/1.65 system-ui,sans-serif}a{color:#075b4d;text-underline-offset:.2em}a:focus-visible{outline:3px solid currentColor;outline-offset:4px}.wrap{width:min(66rem,calc(100% - 2rem));margin:auto}nav{display:flex;flex-wrap:wrap;gap:.6rem 1.5rem;padding:1rem 0}header,footer{background:#fff}footer{padding:1rem 0}.hero{background:#075b4d;color:white;padding:clamp(2rem,6vw,4rem) 0}.hero a{color:white}h1,h2,h3{line-height:1.18}h1{font-size:clamp(2rem,6vw,3.6rem);margin:.35em 0;max-width:25ch}p,li{max-width:75ch}main section.wrap{padding:1.2rem 0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,18rem),1fr));gap:1rem}.card,pre{background:white;border:1px solid #cbdad3;border-radius:.75rem;padding:1rem}.card h3{margin-top:0}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;line-height:1.55}summary{cursor:pointer;font-weight:700;margin-block:.5rem}.skip{position:absolute;left:1rem;top:1rem;background:white;padding:.5rem;transform:translateY(-250%)}.skip:focus{transform:none}</style>
 </head>
 <body>
-  <nav aria-label="Return navigation">
-    <a href="index.html#seminar">Back to the seminar overview</a>
-  </nav>
-  <main>
-    <h1>16 November seminar materials</h1>
-    <p>Building a citizen science monitoring platform with AI.</p>
-    <p>Session materials have yet to be added.</p>
-  </main>
+<a class="skip" href="#main">Skip to content</a>
+<header><nav class="wrap" aria-label="Main navigation"><a href="index.html">ECSAtech home</a><a href="freshwater-survey.html">Session materials</a><a href="frewa-prompts.html">Read the prompts</a><a href="#demos">Demos</a><a href="#prompts">Prompt links</a></nav></header>
+<main id="main" tabindex="-1">
+<section class="hero"><div class="wrap"><p>ECSAtech seminar materials</p><h1>Building a citizen science monitoring platform with AI</h1><p>Open the freshwater demos, follow the survey-to-map workflow and read the original build instructions as web pages.</p></div></section>
+<section class="wrap" id="demos" aria-labelledby="demos-title"><h2 id="demos-title">Open the demonstration platforms</h2><div class="grid"><article class="card"><h3>ChatGPT: two-prompt build</h3><p>This is the Cloudflare and Supabase version participants tested. One prompt prepared the hosting and database; the second built and deployed the survey, map and records interface.</p><p><a href="https://frewa-live-demo.pages.dev/">Open the ChatGPT freshwater demo</a></p></article><article class="card"><h3>Gemini: Google Sites and Firebase</h3><p>Gemini generated a local version in about five minutes. Deployment took roughly another hour using Google Sites and Firebase in Earthwatch’s Google environment.</p><p><a href="https://sites.google.com/earthwatch.org.uk/frewa/">Open the Gemini freshwater demo</a></p></article></div><p>If you submit a test record on a public demo, label it clearly and avoid personal information, identifiable photographs and sensitive coordinates.</p></section>
+<section class="wrap" id="prompts" aria-labelledby="prompts-title"><h2 id="prompts-title">Read the prompts</h2><div class="grid"><article class="card"><h3>Original full-build prompt</h3><p>A single specification covering the survey, shared database, map, records and export.</p><p><a href="frewa-prompts.html#original">Read the original prompt</a></p></article><article class="card"><h3>FreWA setup and live-build prompts</h3><p>The two-stage approach used for the ChatGPT demo: prepare the services first, then build and deploy the application.</p><p><a href="frewa-prompts.html#setup">Read the setup prompt</a><br><a href="frewa-prompts.html#live-build">Read the live-build prompt</a></p></article></div></section>
+<section class="wrap" id="workflow" aria-labelledby="workflow-title"><h2 id="workflow-title">Follow the workflow demonstrated in the seminar</h2><ol><li>Open <em>New observation</em>. Enter a test site name and add or confirm its coordinates.</li><li>Enter the observation date and optional time. Add photographs, notes, participant counts or observations about the waterbody, surroundings, flow, visible conditions and water quality as appropriate.</li><li>Save the observation. The presenter saw a pending upload on a weak connection; the session did not establish that the full workflow worked offline.</li><li>Open the shared map and select a marker. Use the records view to inspect submissions and export a CSV.</li><li>Compare public viewing with owner editing. In the demo, owner sign-in enabled editing and photograph removal.</li></ol></section>
+<section class="wrap" id="build-notes" aria-labelledby="build-notes-title"><h2 id="build-notes-title">Other trials and what to verify</h2><p>An earlier ChatGPT build used a temporary address. Z.ai published a tabbed prototype after about 80 minutes, with sample observations around Oxfordshire. Grok hit a free-tier limit; DeepSeek and Perplexity did not produce builds in the reported trials. These were individual trials under different conditions.</p><p>Before adapting the prototype for field use, confirm where data and images are stored, which fields can be public, how queued submissions behave and who maintains the site. Test whether shared records persist across devices and whether the CSV retains every required field. The build prompts describe requirements; the demonstration did not verify all of them.</p></section>
+
+</main>
+<footer><div class="wrap">ECSAtech · ECSA Projects, Data, Tools and Technology working group</div></footer>
 </body>
 </html>
