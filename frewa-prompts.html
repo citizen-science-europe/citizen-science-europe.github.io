@@ -1,0 +1,687 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FreWA build prompts | ECSAtech</title>
+<style>*{box-sizing:border-box}body{margin:0;background:#f5f8f6;color:#162e2b;font:1rem/1.65 system-ui,sans-serif}a{color:#075b4d;text-underline-offset:.2em}a:focus-visible{outline:3px solid currentColor;outline-offset:4px}.wrap{width:min(66rem,calc(100% - 2rem));margin:auto}nav{display:flex;flex-wrap:wrap;gap:.6rem 1.5rem;padding:1rem 0}header,footer{background:#fff}footer{padding:1rem 0}.hero{background:#075b4d;color:white;padding:clamp(2rem,6vw,4rem) 0}.hero a{color:white}h1,h2,h3{line-height:1.18}h1{font-size:clamp(2rem,6vw,3.6rem);margin:.35em 0;max-width:25ch}p,li{max-width:75ch}main section.wrap{padding:1.2rem 0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,18rem),1fr));gap:1rem}.card,pre{background:white;border:1px solid #cbdad3;border-radius:.75rem;padding:1rem}.card h3{margin-top:0}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;line-height:1.55}summary{cursor:pointer;font-weight:700;margin-block:.5rem}.skip{position:absolute;left:1rem;top:1rem;background:white;padding:.5rem;transform:translateY(-250%)}.skip:focus{transform:none}</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header><nav class="wrap" aria-label="Main navigation"><a href="index.html">ECSAtech home</a><a href="freshwater-survey.html">Session materials</a><a href="frewa-prompts.html">Read the prompts</a><a href="#original">Original</a><a href="#setup">Setup</a><a href="#live-build">Live build</a></nav></header>
+<main id="main" tabindex="-1">
+<section class="hero"><div class="wrap"><p>ECSAtech seminar materials</p><h1>FreWA build prompts</h1><p>Read the original full-build prompt or the two prompts used for the Cloudflare and Supabase demonstration. The prompt text is presented as a seminar resource.</p></div></section>
+<section class="wrap" id="original" aria-labelledby="original-title"><h2 id="original-title">Original full-build prompt</h2><p>Text from the original Word document. Its embedded image is omitted from this text edition.</p><pre># FreWA full build prompt
+
+Build and deploy a working freshwater observation website called **FreWA**.
+
+What we want to demonstrate is: someone completes the full questionnaire on their phone, the observation is saved to a central server, and another person sees it appear automatically on a shared map.
+
+Everything needed to implement the questionnaire is written below. Treat this specification as authoritative. Include all 20 main question groups, their answer options, the Other water-use text field, and the conditional turbidity result field. Do not simplify the questionnaire or change scientific categories.
+
+### 1. Implementation and deployment
+
+Use the hosting, database, and development tools available in your environment. Check access to persistent storage and public deployment early. Make routine implementation decisions and proceed through building, testing, and deployment where tools permit.
+
+Deliver a publicly accessible HTTPS URL with a working server API, persistent shared database, and persistent photograph storage. Records must survive browser closure and be available from another browser or device.
+
+If a required capability or account connection is unavailable, state the specific missing access, complete the work that is possible, and provide the remaining setup steps. Never describe a local preview or device-only store as a working shared deployment. Keep credentials and privileged database access on the server.
+
+State the services used and their known costs or limits. Do not assume hosting or AI access is free. Do not activate a paid service without approval. The completed application should not require an AI API to collect or display observations.
+
+### 2. Questionnaire and validation
+
+Use the sections, labels, field identifiers, answer options, and rules below. Keep identifiers stable in the data model and exports.
+
+Only **site name, latitude and longitude, observation date, and freshwater body type** are required. **Observation time is optional.** All other questions are optional, subject to the conditional validation specified below.
+
+New forms should be blank except that the observation date may default to today&#x27;s local date. Leave time and environmental answers unselected. Do not populate example coordinates, results, participant counts, notes, or photos in a new observation.
+
+#### General information
+
+**G1. Site name**
+
+- Control: single-line text.
+- Required: yes.
+- Reject an empty or whitespace-only value.
+
+**G2. Geolocation**
+
+- Controls: latitude and longitude in decimal degrees, WGS84.
+- Required: both coordinates.
+- Provide a “Use my location” button that requests permission when selected.
+- Offer manual coordinate entry when permission is declined, location capture fails, or the observer needs to identify a different sampling location.
+- Display the coordinates and let the observer confirm the intended sampling location before submission.
+- Validate latitude from −90 to 90 and longitude from −180 to 180. Accept valid zero values.
+- Do not substitute a default site when location capture fails.
+
+**G3. Sample date and time**
+
+- Controls: a date picker and a separate optional time control.
+- Date: required, editable, may default to today&#x27;s local date.
+- Time: optional, blank by default.
+- Store observation date as YYYY-MM-DD and observation time as a nullable HH:mm value. Keep the relevant time-zone context when a time is supplied.
+- A date-only observation must save successfully and display and export with its time blank.
+- Never fill a missing observation time with midnight, device time, or the server&#x27;s receipt time.
+- Record the server&#x27;s receipt timestamp separately as submission metadata.
+- Only derive a complete observation timestamp when the date, time, and time-zone context are available. Preserve the original local date and time.
+
+**G4. Image**
+
+- Control: optional photograph.
+- Offer “Choose an image” and “Take a photo” where supported by the device.
+- Show a preview and allow removal or replacement before submission.
+- Store the uploaded photograph persistently and associate it with the observation. Include its reference in the saved record and export.
+- State supported file types and size limits and show a clear error for an unsupported upload.
+
+**G5. Total number of participants**
+
+- Control: optional whole number.
+- If entered, the value must be at least 1.
+- Keep an unanswered value empty, rather than treating it as zero or one.
+
+**G6. Notes**
+
+- Control: optional multiline text.
+
+#### Ecological
+
+**E1. Freshwater body type**
+
+- Control: single selection.
+- Required: yes.
+- Options:
+  - Pond
+  - Stream
+  - Lake
+  - River
+  - Wetland
+  - Other
+
+**E2. What is the land use in the immediate surroundings?**
+
+- Control: optional single selection.
+- Options:
+  - Urban residential
+  - Industrial
+  - Urban park
+  - Agriculture
+  - Forest
+  - Grassland/shrub
+  - Other
+
+**E3. What is the bank vegetation? Select all that apply.**
+
+- Control: optional multiple selection.
+- Options:
+  - Trees/shrubs
+  - Grass
+  - No vegetation cover
+  - Other
+- “No vegetation cover” is exclusive of the other answers in this question.
+
+**E4. Is there any of the following on the water surface?**
+
+- Control: optional multiple selection.
+- Options:
+  - None
+  - Foam
+  - Floating algae
+  - Litter
+  - Oily film
+- “None” is exclusive of the other answers in this question.
+
+**E5. Are there any pollution sources in the immediate surrounding area? Select all that apply.**
+
+- Control: optional multiple selection.
+- Options:
+  - Industrial discharge
+  - Residential discharge
+  - Urban/road discharge
+  - Other
+- Display these as observer-reported observations. Do not present a selection as verification of a pollution source.
+
+**E6. Can you see evidence of the following water uses? Select all that apply.**
+
+- Control: optional multiple selection.
+- Options:
+  - Fishing
+  - Swimming
+  - Boating
+  - Irrigation
+  - Public water supply
+  - Other
+
+**E6_OTHER. Other**
+
+- Control: optional text explanation.
+- Show when “Other” is selected in E6.
+- Retain the entered explanation in the saved record and export.
+- Treat this as an additional field within E6.
+
+**E7. What aquatic life is there evidence of? Select all that apply.**
+
+- Control: optional multiple selection.
+- Options:
+  - Plants below the surface
+  - Plants emerging from the water
+  - Floating plants
+  - Fish
+  - Frogs/toads
+  - Aquatic birds
+  - None
+  - Other
+- “None” is exclusive of the other answers in this question.
+
+**E8. Algae appearance: select all that apply.**
+
+- Control: optional multiple selection.
+- Options:
+  - No algae
+  - Evenly dispersed
+  - Floating mats
+  - Attached
+  - Blue-green scum
+- “No algae” is exclusive of the other answers in this question.
+
+#### Hydrological
+
+**H1. Estimate the water flow**
+
+- Control: optional single selection.
+- Options:
+  - Surging
+  - Steady
+  - Slow
+  - Still
+
+**H2. Estimate the water level**
+
+- Control: optional single selection.
+- Options:
+  - High
+  - Average
+  - Low
+
+#### Chemical
+
+The nutrient kit is **FreshWater Watch**. Units are **ppm**. Nitrate results are reported **as nitrogen (N)**; phosphate results are reported **as phosphorus (P)**.
+
+Keep the kit, units, and reporting basis visible in the form, record details, and exports. Store them as measurement metadata without requiring the observer to re-enter them.
+
+**C1. Nitrate (ppm as nitrogen, N)**
+
+- Control: optional single selection.
+- Method/kit: FreshWater Watch kit.
+- Analyte: nitrate.
+- Reporting basis: nitrogen (N).
+- Unit: ppm.
+- Options:
+  - `&lt;0.2`
+  - `0.2–0.5`
+  - `0.5–1`
+  - `1–2`
+  - `2–5`
+  - `5–10`
+  - `&gt;10`
+
+**C2. Phosphate (ppm as phosphorus, P)**
+
+- Control: optional single selection.
+- Method/kit: FreshWater Watch kit.
+- Analyte: phosphate.
+- Reporting basis: phosphorus (P).
+- Unit: ppm.
+- Options:
+  - `&lt;0.02`
+  - `0.02–0.05`
+  - `0.05–0.1`
+  - `0.1–0.2`
+  - `0.2–0.5`
+  - `0.5–1`
+  - `&gt;1`
+
+For both nutrient questions, preserve the selected category, including decimal places, inequalities, and range boundaries. Do not replace a range with its midpoint or convert the reporting basis to nitrate as NO3 or phosphate as PO4. Unanswered results remain empty.
+
+#### Optical
+
+**O1. Water quality: Secchi tube (turbidity), NTU**
+
+- Control: optional single selection.
+- Method: Secchi tube.
+- Measurement: turbidity.
+- Unit: NTU.
+- Options:
+  - `&lt;14`
+  - `&gt;240`
+  - Enter result
+- When “Enter result” is selected, show a numeric result input labelled NTU.
+- Require a finite, non-negative numeric result only when “Enter result” is selected.
+- Store the selection and numeric result separately. Selecting &lt;14 or &gt;240 must leave the numeric result empty.
+- Preserve threshold categories as written. Do not turn &lt;14 into a measured value of 14 or &gt;240 into a measured value of 240.
+- Do not convert the result into water depth or a drinking-water safety assessment.
+
+**O2. Estimate the water colour**
+
+- Control: optional single selection.
+- Options:
+  - Colourless
+  - Yellow
+  - Brown
+  - Green
+  - Other
+
+#### Shared field rules
+
+- Provide a way to clear an optional single selection.
+- Preserve all selected answers for multiple-selection fields.
+- Enforce exclusive “None”, “No algae”, and “No vegetation cover” choices within their respective questions.
+- Preserve the distinction between an unanswered question, a valid zero, and an explicit absence such as “None”.
+- Use “Not recorded” when displaying a missing answer; keep the underlying value empty.
+- Do not add answer options, extra mandatory questions, scientific scores, or inferred measurements.
+- Validate submissions on the server as well as in the form.
+- If a conditional choice changes, prevent a stale hidden answer from being submitted as an active result.
+
+### 3. Save observations and handle interrupted connectivity
+
+Implement a server API and persistent shared database containing every questionnaire field and the measurement metadata above.
+
+Assign each observation a stable unique identifier before the first upload attempt. Retrying the same observation must not create a duplicate.
+
+Store pending observations and any selected photograph on the device until the server confirms their receipt. Retry when connectivity returns while the application is open. A successful local save is “Pending upload”; show “Saved to server” only after server acknowledgement.
+
+Show clear pending, uploading, saved, and failed states. Keep answers available after a failed attempt and offer a retry action. Show the status of photograph uploads so an observation is not described as fully uploaded while its image is still pending.
+
+Document limits involving closing the application, offline reopening, background syncing, browser storage, and photo uploads. Do not promise offline behaviour that has not been implemented and tested.
+
+### 4. Shared map, records, and exports
+
+Provide:
+
+- An interactive shared map with selectable observation markers.
+- A records table linked to the same database.
+- A record details view showing every recorded answer and the photograph, if present.
+- Date and location filters.
+- CSV export covering every questionnaire field, additional conditional field, measurement method, unit, reporting basis, photograph reference, and observation identifier.
+- Separate observation date, optional observation time, time-zone context where available, and server receipt timestamp in storage and exports.
+
+Automatically refresh shared observations, aiming for new submissions to appear within five seconds under normal connectivity. Use a suitable polling or real-time mechanism.
+
+Make skipped answers and date-only observations display clearly. Date filters must work when the observation time is missing.
+
+Use consistent CSV headers, proper CSV escaping, and a documented representation for multiple selections. Preserve categorical nutrient ranges and turbidity thresholds without converting them to single numbers. Include all saved fields even when they are empty.
+
+### 5. Experience
+
+Use a clean, accessible layout that works on phones and desktop screens. Keep labels readable, tap targets usable, and validation messages beside the affected controls. Group questions by their survey sections and preserve entered answers when moving between sections.
+
+Make the demonstration publicly viewable and permit anonymous test submissions. Restrict editing and deletion of shared records to an authenticated owner. Hiding an edit button alone is insufficient; enforce access on the server.
+
+Use synthetic observations and non-identifying sample photographs for testing. Clearly label any seeded examples as demonstration data. Keep seeded examples separate from blank new-observation forms.
+
+Keep the first version focused on collection, server storage, the shared map, and exports. Leave external dataset imports, connections to other platforms, and additional features for later prompts. Use documented field identifiers and export formats so later integration is practical.
+
+### 6. Test the completed workflow
+
+Run checks against the working implementation and report each as **passed**, **failed**, or **not tested**, with concise evidence. Fix observed failures where possible.
+
+Check that:
+
+1. All 20 main question groups, every listed option, E6_OTHER, and the conditional numeric turbidity input appear where specified.
+2. Every field and measurement detail is preserved in saved records, record details, and CSV export.
+3. Site name, valid latitude and longitude, observation date, and freshwater body type are required.
+4. An otherwise valid observation with no time submits successfully, persists, appears on the map, and exports with its time blank.
+5. Optional questions can remain unanswered. Exclusive absence choices cannot coexist with contradictory selections in the same question.
+6. Nutrient categories retain their original ranges and inequalities, with the FreshWater Watch kit, ppm, and N/P reporting bases retained.
+7. All three turbidity choices work. “Enter result” requires a valid number; threshold choices do not fabricate a numeric measurement.
+8. A submission persists after refresh and is visible in a separate browser session or device.
+9. Another session&#x27;s map and table update automatically after a submission, with the observed refresh delay reported.
+10. Coordinates place the marker correctly, and date and location filters return the expected records.
+11. An observation submitted without connectivity uploads after reconnection while the app is open, with no duplicate from repeated retries.
+12. An optional photograph persists and remains linked to its observation, including after a retry.
+13. Anonymous users can view and submit demo observations; unauthorised requests to edit or delete shared records are rejected.
+14. The form, map, records, and export work at phone and desktop widths.
+
+Do not report a check as passed based only on reading the code. Distinguish implemented behaviour from behaviour verified in a running application.
+
+### 7. Deliver
+
+Provide:
+
+- The working public HTTPS URL, or the precise deployment blocker and remaining steps.
+- Editable application source and the steps needed to run and redeploy it.
+- A field-coverage checklist mapping each questionnaire identifier to its form control, stored field, and export column.
+- Test results, unresolved failures, and untested behaviour.
+- A short explanation of how observations travel from phone to central database to shared map.
+- Services used, known costs or usage limits, and connectivity limitations.
+
+Complete the implementation and available deployment steps. Make the first working version suitable for a workshop demonstration, with participants refining it through follow-up prompts.</pre></section>
+<section class="wrap" id="setup" aria-labelledby="setup-title"><h2 id="setup-title">Two-prompt version: setup</h2><p>Copy the text between the START and END markers. Keep credentials private and use accounts you control.</p><pre>START SETUP PROMPT
+Prepare my computer and free hosting accounts for a live demonstration in which you will build and publish the complete FreWA freshwater observation app.
+Do the setup now. Leave the actual FreWA app build for the live call. Stop when preparation is complete.
+Use:
+Cloudflare Pages Free for website hosting, with its supplied pages.dev address.
+Supabase Free for the shared database, photos, server functions, and owner sign-in.
+A dedicated local working folder named FreWA-live-demo.
+Do as much as possible yourself. Ask me only when you need sign-in, email verification, password entry, account consent, or a permission you cannot obtain yourself. Continue independent preparation while waiting.
+1. Check your capabilities. Confirm this session can create files, run commands, access the internet, and test pages in a browser. Use the same computer and execution environment that will be used during the call. If essential capabilities are missing, explain the exact remedy before proceeding.
+2. Prepare the tools. Check for Node.js, Cloudflare Wrangler, and the Supabase CLI. Reuse existing installations or install them using supported methods. Authenticate the publishing tools to my accounts; signing into dashboard tabs alone is insufficient. Have me enter credentials privately when necessary.
+3. Prepare dedicated hosting projects. Help me create accounts if needed. Create an empty Cloudflare Pages Direct Upload project and a Supabase project inside a verified Free organization. Choose suitable available names and record the actual identifiers. If this dedicated setup already exists, resume it. Do not modify our existing FreWA website or unrelated projects.
+4. Prepare the owner identity. Create an email/password user for me in the new project’s Supabase Authentication service. Let me enter the password privately. Verify the account works and record its user ID for the future app’s owner permissions.
+5. Test publishing and storage. Publish a simple “Hosting ready for the live demo” page. Use clearly named temporary setup-test resources to prove that you can deploy a Supabase function, write and read a dummy database record, and upload and retrieve a small synthetic image. Check the published page in a signed-out browser. Remove only the temporary test resources you created; retain the projects, owner identity, and harmless holding page.
+6. Save the handoff. Create SETUP.md in the working folder containing the actual Cloudflare account/project identifiers, production branch, verified website URL, Supabase project reference and URL, owner user ID, publishing method, completed checks, and any remaining blockers. Keep passwords and secret tokens in secure credential storage or protected configuration, never in chat, screenshots, source archives, or SETUP.md.
+Stay within free plans. Do not purchase anything, upgrade, add paid APIs, or delete another project to make room.
+Do not build the FreWA questionnaire, application database tables, production API, photo workflow, map, exports, or offline features. Those must be created during the live demonstration.
+Finish with a short readiness checklist based on checks actually performed. Identify anything still untested, and check whether Supabase is active and my Luna usage allowance is visible.
+Tell me to start the live demonstration in this same folder with:
+“Read SETUP.md, then carry out the full FreWA build prompt below.”
+Then stop and wait.
+END SETUP PROMPT</pre></section>
+<section class="wrap" id="live-build" aria-labelledby="live-build-title"><h2 id="live-build-title">Two-prompt version: live build</h2><pre>START FULL BUILD PROMPT
+Read SETUP.md in this project, then carry out the full FreWA build prompt below.
+FreWA — complete build prompt for GPT-6 Luna
+Build and deploy the complete freshwater observation website FreWA. Create the full application, including the form, server API, persistent database, photograph storage, shared map, records, exports, and tests. This is a full application build; a previously completed FreWA app is not required. Use my standing approval for the prepared project’s app deployment steps and continue verifying each result rather than pausing for each CLI confirmation or other confirmations. You already have my pre-approval. 
+The demonstration is: someone completes the full questionnaire on their phone, the observation is saved centrally, and another person sees it appear automatically on the same shared map.
+All questionnaire content and acceptance criteria appear in sections 2–7 below. Treat them as authoritative. Include all 20 main question groups, every option, E6_OTHER, and the conditional turbidity result. Do not reduce the scientific or functional requirements to shorten the build.
+1. Fixed architecture, access check, and publishing route
+1A. Use these services; the hosting decision is already made
+Frontend hosting: Cloudflare Pages, Free plan, using the generated pages.dev HTTPS address. Use a static HTML/CSS/JavaScript frontend with no application bundler or frontend framework unless the supplied project already requires one.
+Database, API, photos, and owner sign-in: one Supabase Free project. Use Postgres for records, Supabase Edge Functions for the server API, Supabase Storage for photo files, and Supabase Auth for owner authentication.
+Map: Leaflet 1.9.4 with OpenStreetMap&#x27;s standard tile service and visible attribution. Follow the tile provider&#x27;s usage policy; do not download tiles for offline use.
+Publish the frontend directly to the selected Cloudflare Pages project using its configured Wrangler deployment or connected publishing tool. Deploy migrations and the Edge Function to the selected Supabase project using its authenticated CLI or connected management tools.
+Use the direct pages.dev URL for the shared demo. Google Sites embedding, a custom domain, migrations to other hosts, and additional platforms are outside this build.
+The completed app must not use an AI API for collecting or displaying observations.
+Use these providers only. Do not spend this run comparing hosts, substituting another provider, or assuming the account has ChatGPT Sites. The model is GPT-6 Luna on a Free account; available deployment tools and permissions must be verified independently.
+1B. Verify access before generating the full app
+The presenter should complete free account creation, sign-in, and publishing access before the call. This preparation supplies accounts and empty service projects; the full app is built by this prompt.
+At the start, read the existing project configuration or connected accounts to identify:
+The Cloudflare account and exact Pages project name.
+The Supabase project reference and URL, and its current Free plan status.
+The authenticated deployment method for both services.
+A pre-created Supabase Auth owner and the owner user ID permitted to edit/delete records.
+A safe way to supply runtime secrets without placing them in source or chat.
+Use verified project identifiers, not guessed IDs. Preserve existing project identity and user data. This prompt authorizes public demo viewing and anonymous test submissions at the selected demo URL, with owner-only edit/delete as specified below. Complete any required platform review before relying on public access.
+Confirm that the current session can edit files, run code, invoke the configured publishing tools, and use the two selected projects. Check whether the Supabase Free project is paused and restore it through the approved account tools if permitted before the demo begins. Check current quotas and the spending boundary. Do not upgrade either service or incur a new paid commitment; use their Free plans within their limits.
+Also identify the browser-testing tools available for section 6, including independent signed-out sessions, mobile viewport checks, and offline/reconnection testing. Flag unavailable testing capabilities before the timed build; provide the exact manual verification steps and keep those checks marked “not tested” until actually executed. Missing testing tools do not justify claiming that the application passed.
+If an account, project, owner identity, permission, execution tool, or required Free-plan capability is unavailable, stop the build before generating the full application. Give one concise, grouped list of the missing items and the exact setup action needed. Do not spend the remaining time implementing a deployment that this account cannot publish. Never claim that a model selection, local preview, or ChatGPT conversation link establishes public hosting or shared persistence.
+Do not ask the user to paste privileged tokens into the prompt. Use the platform&#x27;s authenticated connection or environment/secret configuration. A public Supabase project URL and publishable client key may be used in frontend configuration where required; service-role keys, deployment tokens, and privileged credentials must remain outside the client bundle and source archive.
+1C. Keep the implementation direct
+Use plain HTML, CSS, and JavaScript for the mobile frontend, one questionnaire schema, one small API function, one records table, and one photo bucket. Use a clean white, green, and aqua layout with clear survey sections and tabs for the form, shared map, and records. Choose readable system fonts and simple controls. Avoid new framework selection, decorative image generation, image searches, animation work, and unnecessary dependencies.
+Define the question IDs, labels, options, requiredness, conditional rules, exclusive choices, metadata, and export headers in one schema. Derive the form, record details, CSV order, and coverage checklist from that schema where practical. Use the same rules on the server without relying on browser validation for enforcement.
+Keep observation date, optional time, time-zone context, and the server receipt timestamp distinct. Use stable IDs and indexes needed for the specified filters. Store all questionnaire fields and measurement metadata, preserving null/empty values and selected categories exactly.
+Accept JPEG, PNG, and WebP photographs up to 5 MB, display this limit, and reject unsupported files clearly. Use one small, non-identifying local photo fixture for tests. Use a bundled fixture if available; otherwise create a simple synthetic fixture locally. Do not spend the demo generating photographs with an AI service.
+1D. Fix the server and permission design
+Use a Supabase Edge Function as the server API for reading/creating observations, photograph handling, and owner-authorized updates/deletes. Keep the browser-to-API interface documented. Configure CORS for the actual frontend origin and any explicit local preview origin; CORS is not an authorization mechanism.
+Allow public reads and anonymous creation of demo observations through the API. Validate complete submissions on the server. A retry with the same stable observation ID must not create another record or let an anonymous caller overwrite an existing record.
+Configure the shared Edge Function entrypoint to accept requests without a signed-in user: set its per-function verify_jwt = false in supabase/config.toml. Explicitly verify Supabase Auth tokens inside every owner-only route before performing privileged operations. Disabling the platform&#x27;s JWT gate does not authorize edits or deletes. Test guest requests without an owner session and test missing, invalid, and non-owner tokens against protected routes.
+For editing/deleting, verify the Supabase Auth access token on the server and require the configured owner user ID. Owner status must not be taken from a browser-supplied role, hidden button, client variable, or arbitrary request field.
+Enable row-level security and prevent direct client writes that would bypass API validation or owner authorization. Store photos in a private bucket and expose authorized upload handling and public demo photo reads through the application API or appropriately scoped URLs. Persist the bucket/object reference; do not use an expiring signed URL as the only permanent photo reference. Keep any privileged Supabase key exclusively in the Edge Function&#x27;s server environment and enforce authorization before privileged operations.
+Preserve device-side pending records and photograph files until their full server receipt is confirmed. Make record/photo retries idempotent and recoverable. Never mark a record fully saved while its photograph is still missing or pending. Do not remove the offline/retry requirements from section 3.
+1E. Build, verify, and deploy in a fixed order
+1. Complete the access check above and record the selected project identifiers privately in deployment configuration.
+2. Establish a minimal working API/storage connection and confirm that a synthetic record can be stored and read back. Then build the complete questionnaire and required views using that connection. Do not polish the entire interface before discovering storage is unavailable.
+3. Implement the full requirements in sections 2–5. Use four-second foreground polling for shared observations unless the supplied project already has a working real-time subscription. Avoid continuously polling hidden tabs. Meet the five-second target under normal connectivity and measure it in the test.
+4. Apply schema migrations, deploy the API, and publish the frontend to the already-selected Pages project. Build and install dependencies once where possible. Use small fixes and incremental deployments after observed failures instead of rebuilding the whole project.
+5. Run all 14 checks in section 6 on the working implementation. Use shared fixtures and a consolidated test procedure to avoid repeated setup. A later change requires rerunning any affected check. Do not label an unexecuted check as passed.
+6. Prove guest behavior using an independent signed-out browser/session or genuinely unauthenticated requests. A second tab sharing the owner&#x27;s session does not prove anonymous access. Verify owner behavior separately.
+7. Deliver the actual returned HTTPS deployment URL and the requested source, checklist, evidence, costs/limits, and connectivity notes. Do not invent a URL from a project name or report success before checking deployment status.
+If the configured publish operation fails, diagnose its exact error. An unchanged missing permission/account capability is a blocker, not a reason for repeated blind retries or switching providers. Preserve the completed source and state the remaining step precisely.
+Keep a simple elapsed-time log with separate totals for access/setup, implementation, testing/fixes, and publication. Report the actual largest delay. Do not guarantee a completion time or omit functionality to meet a guessed time target.
+Use official documentation for specific deployment/authentication issues:
+Cloudflare Pages upload: https://developers.cloudflare.com/pages/get-started/direct-upload/
+Cloudflare Pages limits: https://developers.cloudflare.com/pages/platform/limits/
+Supabase function deployment: https://supabase.com/docs/guides/functions/deploy
+Supabase function authentication: https://supabase.com/docs/guides/functions/auth-headers
+Supabase pricing/limits: https://supabase.com/pricing
+2. Questionnaire and validation
+Use the sections, labels, field identifiers, answer options, and rules below. Keep identifiers stable in the data model and exports.
+Only site name, latitude and longitude, observation date, and freshwater body type are required. Observation time is optional. All other questions are optional, subject to the conditional validation specified below.
+New forms should be blank except that the observation date may default to today&#x27;s local date. Leave time and environmental answers unselected. Do not populate example coordinates, results, participant counts, notes, or photos in a new observation.
+General information
+G1. Site name
+Control: single-line text.
+Required: yes.
+Reject an empty or whitespace-only value.
+G2. Geolocation
+Controls: latitude and longitude in decimal degrees, WGS84.
+Required: both coordinates.
+Provide a “Use my location” button that requests permission when selected.
+Offer manual coordinate entry when permission is declined, location capture fails, or the observer needs to identify a different sampling location.
+Display the coordinates and let the observer confirm the intended sampling location before submission.
+Validate latitude from −90 to 90 and longitude from −180 to 180. Accept valid zero values.
+Do not substitute a default site when location capture fails.
+G3. Sample date and time
+Controls: a date picker and a separate optional time control.
+Date: required, editable, may default to today&#x27;s local date.
+Time: optional, blank by default.
+Store observation date as YYYY-MM-DD and observation time as a nullable HH:mm value. Keep the relevant time-zone context when a time is supplied.
+A date-only observation must save successfully and display and export with its time blank.
+Never fill a missing observation time with midnight, device time, or the server&#x27;s receipt time.
+Record the server&#x27;s receipt timestamp separately as submission metadata.
+Only derive a complete observation timestamp when the date, time, and time-zone context are available. Preserve the original local date and time.
+G4. Image
+Control: optional photograph.
+Offer “Choose an image” and “Take a photo” where supported by the device.
+Show a preview and allow removal or replacement before submission.
+Store the uploaded photograph persistently and associate it with the observation. Include its reference in the saved record and export.
+State supported file types and size limits and show a clear error for an unsupported upload.
+G5. Total number of participants
+Control: optional whole number.
+If entered, the value must be at least 1.
+Keep an unanswered value empty, rather than treating it as zero or one.
+G6. Notes
+Control: optional multiline text.
+Ecological
+E1. Freshwater body type
+Control: single selection.
+Required: yes.
+Options:
+Pond
+Stream
+Lake
+River
+Wetland
+Other
+E2. What is the land use in the immediate surroundings?
+Control: optional single selection.
+Options:
+Urban residential
+Industrial
+Urban park
+Agriculture
+Forest
+Grassland/shrub
+Other
+E3. What is the bank vegetation? Select all that apply.
+Control: optional multiple selection.
+Options:
+Trees/shrubs
+Grass
+No vegetation cover
+Other
+“No vegetation cover” is exclusive of the other answers in this question.
+E4. Is there any of the following on the water surface?
+Control: optional multiple selection.
+Options:
+None
+Foam
+Floating algae
+Litter
+Oily film
+“None” is exclusive of the other answers in this question.
+E5. Are there any pollution sources in the immediate surrounding area? Select all that apply.
+Control: optional multiple selection.
+Options:
+Industrial discharge
+Residential discharge
+Urban/road discharge
+Other
+Display these as observer-reported observations. Do not present a selection as verification of a pollution source.
+E6. Can you see evidence of the following water uses? Select all that apply.
+Control: optional multiple selection.
+Options:
+Fishing
+Swimming
+Boating
+Irrigation
+Public water supply
+Other
+E6_OTHER. Other
+Control: optional text explanation.
+Show when “Other” is selected in E6.
+Retain the entered explanation in the saved record and export.
+Treat this as an additional field within E6.
+E7. What aquatic life is there evidence of? Select all that apply.
+Control: optional multiple selection.
+Options:
+Plants below the surface
+Plants emerging from the water
+Floating plants
+Fish
+Frogs/toads
+Aquatic birds
+None
+Other
+“None” is exclusive of the other answers in this question.
+E8. Algae appearance: select all that apply.
+Control: optional multiple selection.
+Options:
+No algae
+Evenly dispersed
+Floating mats
+Attached
+Blue-green scum
+“No algae” is exclusive of the other answers in this question.
+Hydrological
+H1. Estimate the water flow
+Control: optional single selection.
+Options:
+Surging
+Steady
+Slow
+Still
+H2. Estimate the water level
+Control: optional single selection.
+Options:
+High
+Average
+Low
+Chemical
+The nutrient kit is FreshWater Watch. Units are ppm. Nitrate results are reported as nitrogen (N); phosphate results are reported as phosphorus (P).
+Keep the kit, units, and reporting basis visible in the form, record details, and exports. Store them as measurement metadata without requiring the observer to re-enter them.
+C1. Nitrate (ppm as nitrogen, N)
+Control: optional single selection.
+Method/kit: FreshWater Watch kit.
+Analyte: nitrate.
+Reporting basis: nitrogen (N).
+Unit: ppm.
+Options:
+&lt;0.2
+0.2–0.5
+0.5–1
+1–2
+2–5
+5–10
+&gt;10
+C2. Phosphate (ppm as phosphorus, P)
+Control: optional single selection.
+Method/kit: FreshWater Watch kit.
+Analyte: phosphate.
+Reporting basis: phosphorus (P).
+Unit: ppm.
+Options:
+&lt;0.02
+0.02–0.05
+0.05–0.1
+0.1–0.2
+0.2–0.5
+0.5–1
+&gt;1
+For both nutrient questions, preserve the selected category, including decimal places, inequalities, and range boundaries. Do not replace a range with its midpoint or convert the reporting basis to nitrate as NO3 or phosphate as PO4. Unanswered results remain empty.
+Optical
+O1. Water quality: Secchi tube (turbidity), NTU
+Control: optional single selection.
+Method: Secchi tube.
+Measurement: turbidity.
+Unit: NTU.
+Options:
+&lt;14
+&gt;240
+Enter result
+When “Enter result” is selected, show a numeric result input labelled NTU.
+Require a finite, non-negative numeric result only when “Enter result” is selected.
+Store the selection and numeric result separately. Selecting &lt;14 or &gt;240 must leave the numeric result empty.
+Preserve threshold categories as written. Do not turn &lt;14 into a measured value of 14 or &gt;240 into a measured value of 240.
+Do not convert the result into water depth or a drinking-water safety assessment.
+O2. Estimate the water colour
+Control: optional single selection.
+Options:
+Colourless
+Yellow
+Brown
+Green
+Other
+Shared field rules
+Provide a way to clear an optional single selection.
+Preserve all selected answers for multiple-selection fields.
+Enforce exclusive “None”, “No algae”, and “No vegetation cover” choices within their respective questions.
+Preserve the distinction between an unanswered question, a valid zero, and an explicit absence such as “None”.
+Use “Not recorded” when displaying a missing answer; keep the underlying value empty.
+Do not add answer options, extra mandatory questions, scientific scores, or inferred measurements.
+Validate submissions on the server as well as in the form.
+If a conditional choice changes, prevent a stale hidden answer from being submitted as an active result.
+3. Save observations and handle interrupted connectivity
+Implement a server API and persistent shared database containing every questionnaire field and the measurement metadata above.
+Assign each observation a stable unique identifier before the first upload attempt. Retrying the same observation must not create a duplicate.
+Store pending observations and any selected photograph on the device until the server confirms their receipt. Retry when connectivity returns while the application is open. A successful local save is “Pending upload”; show “Saved to server” only after server acknowledgement.
+Show clear pending, uploading, saved, and failed states. Keep answers available after a failed attempt and offer a retry action. Show the status of photograph uploads so an observation is not described as fully uploaded while its image is still pending.
+Document limits involving closing the application, offline reopening, background syncing, browser storage, and photo uploads. Do not promise offline behaviour that has not been implemented and tested.
+4. Shared map, records, and exports
+Provide:
+An interactive shared map with selectable observation markers.
+A records table linked to the same database.
+A record details view showing every recorded answer and the photograph, if present.
+Date and location filters.
+CSV export covering every questionnaire field, additional conditional field, measurement method, unit, reporting basis, photograph reference, and observation identifier.
+Separate observation date, optional observation time, time-zone context where available, and server receipt timestamp in storage and exports.
+Automatically refresh shared observations, aiming for new submissions to appear within five seconds under normal connectivity. Use a suitable polling or real-time mechanism.
+Make skipped answers and date-only observations display clearly. Date filters must work when the observation time is missing.
+Use consistent CSV headers, proper CSV escaping, and a documented representation for multiple selections. Preserve categorical nutrient ranges and turbidity thresholds without converting them to single numbers. Include all saved fields even when they are empty.
+5. Experience
+Use a clean, accessible layout that works on phones and desktop screens. Keep labels readable, tap targets usable, and validation messages beside the affected controls. Group questions by their survey sections and preserve entered answers when moving between sections.
+Make the demonstration publicly viewable and permit anonymous test submissions. Restrict editing and deletion of shared records to an authenticated owner. Hiding an edit button alone is insufficient; enforce access on the server.
+Use synthetic observations and non-identifying sample photographs for testing. Clearly label any seeded examples as demonstration data. Keep seeded examples separate from blank new-observation forms.
+Keep the first version focused on collection, server storage, the shared map, and exports. Leave external dataset imports, connections to other platforms, and additional features for later prompts. Use documented field identifiers and export formats so later integration is practical.
+6. Test the completed workflow
+Run checks against the working implementation and report each as passed, failed, or not tested, with concise evidence. Fix observed failures where possible.
+Check that:
+1. All 20 main question groups, every listed option, E6_OTHER, and the conditional numeric turbidity input appear where specified.
+2. Every field and measurement detail is preserved in saved records, record details, and CSV export.
+3. Site name, valid latitude and longitude, observation date, and freshwater body type are required.
+4. An otherwise valid observation with no time submits successfully, persists, appears on the map, and exports with its time blank.
+5. Optional questions can remain unanswered. Exclusive absence choices cannot coexist with contradictory selections in the same question.
+6. Nutrient categories retain their original ranges and inequalities, with the FreshWater Watch kit, ppm, and N/P reporting bases retained.
+7. All three turbidity choices work. “Enter result” requires a valid number; threshold choices do not fabricate a numeric measurement.
+8. A submission persists after refresh and is visible in a separate browser session or device.
+9. Another session&#x27;s map and table update automatically after a submission, with the observed refresh delay reported.
+10. Coordinates place the marker correctly, and date and location filters return the expected records.
+11. An observation submitted without connectivity uploads after reconnection while the app is open, with no duplicate from repeated retries.
+12. An optional photograph persists and remains linked to its observation, including after a retry.
+13. Anonymous users can view and submit demo observations; unauthorised requests to edit or delete shared records are rejected.
+14. The form, map, records, and export work at phone and desktop widths.
+Do not report a check as passed based only on reading the code. Distinguish implemented behaviour from behaviour verified in a running application.
+7. Deliver
+Provide:
+The working public HTTPS URL, or the precise deployment blocker and remaining steps.
+Editable application source and the steps needed to run and redeploy it.
+A field-coverage checklist mapping each questionnaire identifier to its form control, stored field, and export column.
+Test results, unresolved failures, and untested behaviour.
+A short explanation of how observations travel from phone to central database to shared map.
+Services used, known costs or usage limits, and connectivity limitations.
+Complete the implementation and available deployment steps. Make the first working version suitable for a workshop demonstration, with participants refining it through follow-up prompts.
+END FULL BUILD PROMPT</pre></section>
+
+</main>
+<footer><div class="wrap">ECSAtech · ECSA Projects, Data, Tools and Technology working group</div></footer>
+</body>
+</html>
